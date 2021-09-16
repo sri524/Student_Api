@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Student_Api.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,22 +17,25 @@ namespace Student_Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IConfiguration _config;
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            _config = config;
         }
 
-        public IConfiguration Configuration { get; }
+      
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddApplicationServices(_config);
+            services.AddIdentityServices(_config);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Student_Api", Version = "v1" });
             });
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,10 +48,13 @@ namespace Student_Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Student_Api v1"));
             }
 
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+           
+            app.UseAuthentication();
+           
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
