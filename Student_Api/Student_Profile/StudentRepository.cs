@@ -22,6 +22,9 @@ namespace Student_Api.Student_Profile
             _mapper = mapper;
             _context = context;
         }
+
+       
+
         public async Task<ProfileDto> GetMemberAsync(string username)
         {
             return await _context.Student
@@ -75,5 +78,11 @@ namespace Student_Api.Student_Profile
         {
             _context.Entry(student).State = EntityState.Modified;
         }
+        public void  Delete(Student student)
+        {
+            _context.Student.Remove(student);
+            
+        }
+
     }
 }

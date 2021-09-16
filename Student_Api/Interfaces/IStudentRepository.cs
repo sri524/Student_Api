@@ -12,6 +12,7 @@ namespace Student_Api.Interfaces
     public interface IStudentRepository
     {
         void Update(Student user);
+        void Delete(Student user);
         Task<bool> SaveAllAsync();
         Task<IEnumerable<Student>> GetUsersAsync();
         Task<Student> GetUserByIdAsync(int id);

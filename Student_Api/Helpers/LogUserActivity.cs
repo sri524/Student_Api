@@ -16,11 +16,14 @@ namespace Student_Api.Helpers
 
             var resultContext = await next();
             if (!resultContext.HttpContext.User.Identity.IsAuthenticated) return;
-            var userName = resultContext.HttpContext.User.GetUsername();
+            var userId = resultContext.HttpContext.User.GetUserId();
             var repo = resultContext.HttpContext.RequestServices.GetService<IStudentRepository>();
-            var user = await repo.GetUserByUsernameAsync(userName);
-            user.LastActive = DateTime.Now;
-            await repo.SaveAllAsync();
+            var user = await repo.GetUserByIdAsync(userId);
+            if (user != null)
+            {
+                user.LastActive = DateTime.Now;
+                await repo.SaveAllAsync();
+            }
         }
     }
 }

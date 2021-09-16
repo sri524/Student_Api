@@ -133,5 +133,21 @@ namespace Student_Api.Controllers
             return BadRequest("Failed to delete the photo");
         }
 
+        
+        [HttpDelete]
+        public async Task<IActionResult> DeleteStudent(int id)
+        {
+            var student = await _studentRepository.GetUserByUsernameAsync(User.GetUsername());
+            if (student == null)
+            {
+                return NotFound();
+            }
+            _studentRepository.Delete(student);
+
+            if (await _studentRepository.SaveAllAsync()) return NoContent();
+
+            return BadRequest("Failed to Delete user");
+        }
+
     }
 }
